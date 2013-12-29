@@ -1,4 +1,4 @@
-﻿// war3-lua-engine.cpp : Defines the exported functions for the DLL application.
+// war3-lua-engine.cpp : Defines the exported functions for the DLL application.
 //
 
 #include "stdafx.h"
@@ -534,8 +534,8 @@ public:
 			CALL _GetLocation;
 			POPAD;
 		}
-		GlobalLocations[GlobalLocationsCount] = loc;
 		GlobalLocationsCount++;
+		GlobalLocations[GlobalLocationsCount] = loc;
 		return GlobalLocationsCount;
 	}
 	int GetSelectedUnit()
@@ -552,8 +552,8 @@ public:
 			MOV EAX,DWORD PTR DS:[ECX+0x1E0];
 			MOV rt,EAX;
 		}
-		GlobalUnits[GlobalUnitsCount] = (Unit*)rt;
 		GlobalUnitsCount++;
+		GlobalUnits[GlobalUnitsCount] = (Unit*)rt;
 		return GlobalUnitsCount;
 	}
 	float Distance(int one, int two)

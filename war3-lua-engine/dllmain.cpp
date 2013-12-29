@@ -27,7 +27,9 @@ VOID LoadScript( LPVOID Args )
 		lua_close(L);
 		delete [] ScriptName;
 		return;
-    }
+    }else{
+		lua_pcall(L, 0, LUA_MULTRET, 0);
+	}
 
 //	luabridge::LuaRef init_function = luabridge::getGlobal(L, "Init");
 //	if (!lua_isnil(L,init_function))

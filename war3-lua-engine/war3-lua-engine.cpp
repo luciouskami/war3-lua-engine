@@ -14,7 +14,7 @@
 #pragma comment(lib, "Advapi32.lib")
 
 Unit* GlobalUnits[1000];
-int GlobalUnitsCount = 0;
+int GlobalUnitsCount = 1;
 Location GlobalLocations[1000];
 int GlobalLocationsCount = 0;
 
@@ -543,7 +543,7 @@ public:
 		HPLAYER plr = gGetLocalPlayer();
 		HUNIT rt;
 
-		if (GlobalUnitsCount >= 1000) GlobalUnitsCount = 0;
+		if (GlobalUnitsCount >= 1000) GlobalUnitsCount = 1;
 
 		__asm
 		{
@@ -613,12 +613,14 @@ public:
 	{	
 		int unt = GetSelectedUnit();
 		Unit* unit = GlobalUnits[unitID];
+
+		if (targetID != 0)
 		Unit* target = GlobalUnits[targetID];
 
 		if (unit)
 			gSelectUnit(unitID);
 
-		if (!target)
+		if (targetID == 0)
 		{
 			__asm
 			{
@@ -741,7 +743,7 @@ public:
 		DWORD len = 0;
 		DWORD arr = GetUnitArray(len);
 
-		if (GlobalUnitsCount >= 1000) GlobalUnitsCount = 0;
+		if (GlobalUnitsCount >= 1000) GlobalUnitsCount = 1;
 
 		for (DWORD i = 0; i < len; i++)
 		{
@@ -766,7 +768,7 @@ public:
 		DWORD len = 0;
 		DWORD arr = GetUnitArray(len);
 
-		if (GlobalUnitsCount >= 1000) GlobalUnitsCount = 0;
+		if (GlobalUnitsCount >= 1000) GlobalUnitsCount = 1;
 
 		for (DWORD i = 0; i < len; i++)
 		{

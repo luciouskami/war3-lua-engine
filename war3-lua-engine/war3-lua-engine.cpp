@@ -614,9 +614,6 @@ public:
 		int unt = GetSelectedUnit();
 		Unit* unit = GlobalUnits[unitID];
 
-		if (targetID != 0)
-		Unit* target = GlobalUnits[targetID];
-
 		if (unit)
 			gSelectUnit(unitID);
 
@@ -638,6 +635,7 @@ public:
 		}
 		else
 		{
+			Unit* target = GlobalUnits[targetID];
 			__asm
 			{
 				PUSH 0

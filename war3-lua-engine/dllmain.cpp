@@ -22,14 +22,24 @@ VOID LoadScript( LPVOID Args )
 
 	War3LuaEngine::addToState (L);
 
-	int status = luaL_loadfile(L, ScriptName);
-	if (status != 0) {
+
+	// Execute lua files in order
+	if (luaL_loadfile (L, ScriptName) != 0)
+	{
+		// compile-time error
 		lua_close(L);
 		delete [] ScriptName;
 		return;
-    }else{
-		lua_pcall(L, 0, LUA_MULTRET, 0);
 	}
+	else if (lua_pcall(L, 0, 0, errorFunctionRef) != 0)
+	{
+		// runtime error
+		lua_close(L);
+		delete [] ScriptName;
+		return;
+	}
+
+	
 
 //	luabridge::LuaRef init_function = luabridge::getGlobal(L, "Init");
 //	if (!lua_isnil(L,init_function))

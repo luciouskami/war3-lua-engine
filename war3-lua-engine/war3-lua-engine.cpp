@@ -648,7 +648,7 @@ public:
 				CALL _MoveTargetCmd
 			}
 		}
-		if (unt && !IsDead(unt))
+		if (unit)
 			gSelectUnit(unt);
 	}
 	DWORD GetPlayerNumber()
@@ -683,6 +683,56 @@ public:
 	DWORD gGetLocalPlayer()
 	{
 		return GetPlayerByNumber(GetPlayerNumber());
+	}
+	DWORD GetOwningPlayer(int unitID)
+	{
+		Unit* unit = GlobalUnits[unitID];
+		DWORD num = unit->dwOwnerSlot;
+		return GetPlayerByNumber(num);
+	}
+	bool IsPlayerEnemy(DWORD pl1, DWORD pl2)
+	{
+		bool result;
+		__asm
+		{
+			MOV EDI,pl1;
+			MOV EAX,pl2;
+			MOVZX ESI,DWORD PTR DS:[EAX+0x30];
+			MOV ECX,EDI;
+			CALL _6F41BF00;
+			LEA ECX, DWORD PTR DS:[EAX+0x38];
+			CALL _6F473C20;
+			MOV ECX,ESI;
+			MOV EDX,1;
+			SHL EDX,CL;
+			AND EAX,EDX;
+			NEG EAX;
+			SBB EAX,EAX;
+			ADD EAX,1;
+			MOV result,AL;
+		}
+		return result;
+	}
+	bool IsUnitVisibleToPlayer(int unitID, DWORD Player)
+	{
+		Unit* unit = GlobalUnits[unitID];
+
+		if (!unit)
+			return false;
+
+		__asm
+		{
+			MOV ESI,unit;
+			MOV EAX,Player;
+			MOVZX EAX,BYTE PTR DS:[EAX+0x30];
+			MOV EDX,DWORD PTR DS:[ESI];
+			PUSH 4;
+			PUSH 0;
+			PUSH EAX;
+			MOV EAX,DWORD PTR DS:[EDX+0xFC];
+			MOV ECX,ESI;
+			CALL EAX;
+		}
 	}
 	bool IsHero(int unitID)
 	{
@@ -979,10 +1029,13 @@ void addToState (lua_State *L)
 			.addFunction("SendCommand",&CGame::SendCommand)
 			.addFunction("IsHero",&CGame::IsHero)
 			.addFunction("IsUnitOwnedByPlayer",&CGame::IsUnitOwnedByPlayer)
+			.addFunction("IsUnitVisibleToPlayer",&CGame::IsUnitVisibleToPlayer)
+			.addFunction("IsPlayerEnemy",&CGame::IsPlayerEnemy)
 			.addFunction("GetLocalPlayer",&CGame::gGetLocalPlayer)
 			.addFunction("GetLocalPlayerNumber",&CGame::GetPlayerNumber)
 			.addFunction("GetPlayerByNumber",&CGame::GetPlayerByNumber)
 			.addFunction("GetUnitLocation",&CGame::GetUnitLocation)
+			.addFunction("GetOwningPlayer",&CGame::GetOwningPlayer)
 			.addFunction("Distance",&CGame::Distance)
 		.endClass();
 
